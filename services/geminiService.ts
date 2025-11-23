@@ -21,20 +21,20 @@ export const sendMessageToStylist = async (
   userMessage: string
 ): Promise<string> => {
   try {
-    const model = 'gemini-2.5-flash';
-    
+    const model = "gemini-2.5-flash";
+
     // Construct history for the API
-    // We only send the last few messages to keep context but save tokens, 
+    // We only send the last few messages to keep context but save tokens,
     // though for this simple implementation we'll send the valid history.
-    const contents = history.map(msg => ({
+    const contents = history.map((msg) => ({
       role: msg.role,
-      parts: [{ text: msg.text }]
+      parts: [{ text: msg.text }],
     }));
 
     // Add the new user message
     contents.push({
-      role: 'user',
-      parts: [{ text: userMessage }]
+      role: "user",
+      parts: [{ text: userMessage }],
     });
 
     const response = await ai.models.generateContent({
@@ -43,12 +43,17 @@ export const sendMessageToStylist = async (
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
         temperature: 0.7, // A bit of creativity but stable
-      }
+      },
     });
 
-    return response.text || "I'm having a moment of silence. Please ask again shortly.";
+    return (
+      response.text ||
+      "I'm having a moment of silence. Please ask again shortly."
+    );
   } catch (error) {
     console.error("Gemini API Error:", error);
-    throw new Error("My connection to the ether is weak right now. Please try again.");
+    throw new Error(
+      "My connection to the ether is weak right now. Please try again."
+    );
   }
 };
